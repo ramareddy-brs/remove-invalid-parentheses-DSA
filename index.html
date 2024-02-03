@@ -26,6 +26,14 @@
       <p class="text-start">
         This code defines a function removeInvalidParentheses that takes a string s as input and returns an array of valid strings with the minimum number of removals. The isValid function checks if a given string is valid with balanced parentheses. The BFS approach is used to explore all possible combinations by removing one parenthesis at a time and checking if the resulting string is valid. The visited set is used to avoid duplicates in the queue
       </p>
+
+      <label for="inputString">Input String:</label>
+      <input type="text" id="inputString" placeholder="Enter string with parentheses">
+
+      <button onclick="removeInvalidParentheses()">Remove Invalid Parentheses</button>
+
+      <h3>Result:</h3>
+      <ul id="result"></ul>
     </main>
 
     <footer class="footer footer-dark">

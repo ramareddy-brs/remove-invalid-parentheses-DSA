@@ -1,52 +1,65 @@
-function removeInvalidParentheses(s) {
-  const result = [];
-  const queue = [s];
-  const visited = new Set();
-  let found = false;
+function removeInvalidParentheses() {
+    const inputString = document.getElementById('inputString').value;
+    const resultElement = document.getElementById('result');
 
-  while (queue.length > 0) {
-      const current = queue.shift();
+    // Function to remove invalid parentheses
+    function isValid(s) {
+        let count = 0;
 
-      if (isValid(current)) {
-          result.push(current);
-          found = true;
-      }
+        for (const char of s) {
+            if (char === '(') {
+                count++;
+            } else if (char === ')') {
+                if (count === 0) {
+                    return false;
+                }
+                count--;
+            }
+        }
 
-      if (found) {
-          continue;
-      }
+        return count === 0;
+    }
 
-      for (let i = 0; i < current.length; i++) {
-          if (current[i] === '(' || current[i] === ')') {
-              const next = current.slice(0, i) + current.slice(i + 1);
-              if (!visited.has(next)) {
-                  visited.add(next);
-                  queue.push(next);
-              }
-          }
-      }
-  }
+    function removeHelper(s, start, lastRemoved, result) {
+        let count = 0;
 
-  return result;
+        for (let i = start; i < s.length; i++) {
+            if (s[i] === '(') {
+                count++;
+            } else if (s[i] === ')') {
+                count--;
+            }
+
+            if (count >= 0) {
+                continue;
+            }
+
+            for (let j = lastRemoved; j <= i; j++) {
+                if (s[j] === ')' && (j === lastRemoved || s[j - 1] !== ')')) {
+                    removeHelper(s.substring(0, j) + s.substring(j + 1), i, j, result);
+                }
+            }
+
+            return;
+        }
+
+        const reversed = s.split('').reverse().join('');
+
+        if (count === 0) {
+            result.add(s);
+        } else {
+            removeHelper(reversed, 0, 0, result);
+        }
+    }
+
+    const result = new Set();
+    removeHelper(inputString, 0, 0, result);
+
+    // Display the result
+    resultElement.innerHTML = '';
+    result.forEach(validString => {
+        const listItem = document.createElement('li');
+        listItem.textContent = validString;
+        resultElement.appendChild(listItem);
+    });
 }
-
-function isValid(s) {
-  let count = 0;
-
-  for (let i = 0; i < s.length; i++) {
-      if (s[i] === '(') {
-          count++;
-      } else if (s[i] === ')') {
-          count--;
-          if (count < 0) {
-              return false;
-          }
-      }
-  }
-
-  return count === 0;
-}
-
-const input = "()())()";
-const output = removeInvalidParentheses(input);
-console.log(output);
